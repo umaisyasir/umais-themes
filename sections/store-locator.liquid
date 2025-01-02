@@ -1,0 +1,307 @@
+<style>
+  #locations{
+  	display:flex;
+    flex-direction:column;
+    background-color:#eee;
+    overflow:auto;
+    width:98vw;
+    margin: auto;
+  }
+  .expand-locations{
+    padding:20px auto !important ;
+    font-size: 15px;
+    font-weight: bolder;
+    color: rgb(82, 81, 81);
+  }
+  .items,.expand-locations{
+  	background-color:white;
+  	padding:10px 10px;
+    display:flex;
+    justify-content:center;
+    flex-direction:column;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border:none;
+    border-bottom: 1px solid lightgray;
+  }
+  .name,.city,.contact,.timing,a{
+		display:block;
+    	padding:1px;
+    }
+  .name{
+  	font-size:16px;
+    font-weight:bold;
+  }
+  .city{
+  	font-size:14px;
+  }
+  .items:hover{
+  	cursor:pointer;
+  }
+  @media (max-width:800px) {
+    #location{
+      display:flex;
+      flex-direction:row;
+    }
+    #map-container{
+      display: grid !important;
+      flex-direction: row !important;
+    }
+    #locations,#map{
+      width: 100% !important;
+    }
+  }
+  
+    /*   mn styles */
+  h1{
+      font-size: 28px !important;
+    letter-spacing: 0.5px !important;
+    margin-bottom: 0px !important;
+    padding: 0 65px;
+  }
+  #map-container {
+    padding: 40px 50px;
+	}
+  .main-content{
+  	padding-top:50px;
+  }
+  .breadcrumb {
+    display: none;
+	}
+  @media(max-width:768px){
+  .main-content {
+    padding-top: 30px;
+	}
+    h1{
+      font-size: 23px !important;
+    padding: 0 25px;
+  	}
+    #map-container {
+    padding: 20px 20px;
+	}
+    #locations {
+    margin-bottom: 20px;
+	}
+  }
+  @media(max-width:767px){
+  .main-content {
+    padding-top: 35px;
+	}
+    #map-container {
+    padding: 20px 15px;
+	}
+    h1{
+    padding: 0 20px;
+  	}
+    #main {
+    margin-top: 80px;
+	}
+  }
+  /*   mn styles end */
+  
+</style>
+<h1 style="font-weight:lighter">Store Locations</h1>
+  <div id="map-container" style="display:flex" onload="getLocation()">
+    <div id="locations" style="width:25%;height:90vh;"></div> 
+  	<div id="map" style="width:72%;height:90vh;margin: auto;"></div>
+  </div>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" crossorigin="anonymous"></script>
+<script>
+  domain="shoeboxpk.myshopify.com"
+  const BackEndURL="https://store-locator-be.alche.cloud"
+  var Token=""
+  var stores=[]
+  var currentLocation=[]
+  var currentPostitionLat,currentPostitionLng=""
+    axios.post(`${BackEndURL}/get_token`,{"domain":"shoeboxpk.myshopify.com"})
+    .then(res=>{
+        console.log(res.data)
+        Token = res.data.token
+        StoreLocation()
+        getLocation()
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+   	let buttonName=""
+    function StoreLocation(){
+    axios.get(`${BackEndURL}/AllLocations?shop=shoeboxpk.myshopify.com&status=True`,{headers:{"Authorization":`token ${Token}`}})
+    .then(res=>{
+        stores=res.data
+//         console.log(stores)
+        for(x in stores){
+          if (buttonName!=stores[x].city){
+            $("#locations").append(
+              `<Button class="expand-locations" value="${stores[x].city.replace(" ","-")}" style="padding:10px;text-align:center;">${stores[x].city}</button>`
+			)
+            buttonName=stores[x].city
+          }
+          distance=""
+          distance = getDistanceFromLatLng(parseFloat(stores[x].lat),parseFloat(stores[x].lng),currentPostitionLat,currentPostitionLng).toFixed(2)
+          console.log(distance)
+          if(Number.isNaN(distance)){
+            distance=""
+          }
+          $("#locations").append(
+            `<div class="items ${stores[x].city.replace(" ","-")}" style="display:none; cursor:pointer" onclick="GetStoreLocation(${x})">
+			  <font class="name" style="display:flex;justify-content:space-between;"><span>${stores[x].name}</span><span style="color:green;padding-right:10px;">${distance} km</span></font>
+			  <font class="city">${stores[x].address}, ${stores[x].city}, ${stores[x].province}</font>
+			  <font class="timing">${stores[x].timing_details}</font>
+              <font class="city">${stores[x].city}, ${stores[x].province}</font>
+              <font class="contact">${stores[x].contact}</font>
+         <a href="https://www.google.com/maps/search/${stores[x].address}${stores[x].address}" style="text-decoration:none;color:dodgerblue;" target="_blank">Open in Google Map</a>
+        </div>`
+          )
+        }
+      	myMap()
+      $(".expand-locations").click(function(){
+            let temp=$(this).val();
+        		console.log(temp)
+                $(`.${temp}`).slideToggle();
+          });        
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+    }
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+function showPosition(position) {
+        currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+		currentPostitionLat=position.coords.latitude
+        currentPostitionLng=position.coords.longitude
+//         console.log(currentLocation)
+//         currentCityMap(currentLocation)
+        myMap()
+}
+  function myMap(){
+      var options = {
+            zoom:3,
+            center:{lat:30.3753,lng:69.3451}
+      }
+      // New map
+      const directionsService = new google.maps.DirectionsService();
+      var map = new google.maps.Map(document.getElementById("map"), options);
+      var directionsRenderer = new google.maps.DirectionsRenderer();
+      // Array of markers
+      var markers = stores
+      // Loop through markers
+      for(var i = 0;i < markers.length;i++){
+        // Add marker
+        addMarker(markers[i]);
+      }
+      // Add Marker Function
+      function addMarker(props){
+        var marker = new google.maps.Marker({
+          position:{lat:parseFloat(props.lat),lng:parseFloat(props.lng)},
+          map:map,
+        });
+        directionsRenderer.setMap(map);
+        // Check for customicon ### For Adding Custom Icon On Pin Point Location
+//         if(props.iconImage){
+//           // Set icon image
+//           marker.setIcon(props.iconImage);
+//         }
+          var infoWindow = new google.maps.InfoWindow({
+            content:`<font><strong>${props.name}</strong><br/>${props.address}</font>`
+          });
+          marker.addListener("click", function(){
+            infoWindow.open(map, marker);
+            directionsService.route(
+              {
+                origin: currentLocation,
+                destination: {lat:parseFloat(props.lat),lng:parseFloat(props.lng)},
+                travelMode: "DRIVING"
+              },
+              (response, status) => {
+                if(status=="OK"){
+                  directionsRenderer.setDirections(response);
+                  temp=google.maps.geometry.spherical.computeDistanceBetween ({lat:parseFloat(props.lat),lng:parseFloat(props.lng)}, currentLocation);
+          		  console.log(temp)
+                }
+              }
+          	)
+          });
+      }
+    }
+   function GetStoreLocation(i){
+     var options = {
+            zoom:16,
+            center:{lat:parseFloat(stores[i].lat),lng:parseFloat(stores[i].lng)}
+      }
+      // New map
+      const directionsService = new google.maps.DirectionsService();
+      var map = new google.maps.Map(document.getElementById(`map`), options);
+      var directionsRenderer = new google.maps.DirectionsRenderer();
+          var markers = stores
+          var marker = new google.maps.Marker({
+          position:{lat:parseFloat(stores[i].lat),lng:parseFloat(stores[i].lng)},
+          map:map,
+        });
+        directionsRenderer.setMap(map);
+      	var infoWindow = new google.maps.InfoWindow({
+            content:`<font><strong>${stores[i].name}</strong><br/>${stores[i].address}</font>`
+          });
+          marker.addListener("click", function(){
+            infoWindow.open(map, marker);
+            directionsService.route(
+              {
+                origin: currentLocation,
+                destination: {lat:parseFloat(stores[i].lat),lng:parseFloat(stores[i].lng)},
+                travelMode: "DRIVING"
+              },
+              (response, status) => {
+                if(status=="OK"){
+                  directionsRenderer.setDirections(response);
+                }
+              }
+          	)
+          });
+        return true;
+      }
+  /* Distance between two lat/lng coordinates in km using the Haversine formula */
+function getDistanceFromLatLng(lat1, lng1, lat2, lng2, miles) { // miles optional
+  if (typeof miles === "undefined"){miles=false;}
+  function deg2rad(deg){return deg * (Math.PI/180);}
+  function square(x){return Math.pow(x, 2);}
+  var r=6371; // radius of the earth in km
+  lat1=deg2rad(lat1);
+  lat2=deg2rad(lat2);
+  var lat_dif=lat2-lat1;
+  var lng_dif=deg2rad(lng2-lng1);
+  var a=square(Math.sin(lat_dif/2))+Math.cos(lat1)*Math.cos(lat2)*square(Math.sin(lng_dif/2));
+  var d=2*r*Math.asin(Math.sqrt(a));
+  if (miles){return d * 0.621371;} //return miles
+  else{return d;} //return km
+}
+</script>
+
+<!-- [DEV MN] -->
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLf8zAu8Hpa-Ke2qXNyRtVQDc4ZMuUZKg"></script> -->
+<!-- New API KEY -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDW_FyfClVs2oNS8plFRMZTlihJxTLhNiI"></script>
+
+{% schema %}
+  {
+    "name": "Store Locator",
+    "settings": [],
+	"presets":[
+		{
+		"name":"Store Locator"
+	}
+	]
+
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

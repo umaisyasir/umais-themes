@@ -1,0 +1,171 @@
+<style>
+.mobile-image{
+    display: none;
+}
+
+.img-wrapper img,
+.img-wrapper video{
+    width: 100%;
+    height: auto;
+    
+}
+
+.main-banner-slider-container{
+    position: relative;
+}
+
+.custom-mute-button{
+    position: absolute;
+    bottom: 20px;
+    right: 60px;
+    z-index: 999;
+}
+
+@media only screen and (max-width: 767px){
+ .mobile-image{
+    display: block;
+}   
+
+.desktop-image{
+    display: none;
+}
+
+.desktop-image.desktop__mobile--video {
+    display: block;
+}
+
+.img-wrapper img,
+.img-wrapper video {
+    width: 100%;
+    height: 100vh !important;
+    object-fit: cover;
+}
+
+.custom-mute-button{
+    right: 14px;
+    bottom: 10%;
+}
+
+}
+</style>
+
+<div class="swiper mySwiper main-banner-slider-container">
+  <div class="swiper-wrapper">
+    {% for block in section.blocks %}
+      <div class="swiper-slide img-wrapper {{ block.settings.slide_color }}" data-color="{{ block.settings.slide_color }}">
+        <a href="{{ block.settings.button_link }}">
+          {% if block.settings.desktop_video != blank %}
+            <video class="custom__video desktop-image custom-muted-video{% if block.settings.mobile_video != blank %} desktop__mobile--video{% endif %}" playsinline autoplay muted loop="true"
+              {% if block.settings.mobile_video != blank %} data-mobile-video-src="{{ block.settings.mobile_video.sources[1].url }}"{% endif %}
+              {% if block.settings.desktop_video != blank %} data-desktop-video-src="{{ block.settings.desktop_video.sources[1].url }}"{% endif %}
+            >
+              <source src="{{ block.settings.desktop_video.sources[1].url }}" type="video/mp4">
+              <source src="{{ block.settings.desktop_video.sources[1].url }}" type="video/ogg">
+            </video>
+          {% else %}
+            <img class="desktop-image" src="{{ block.settings.desktop_image | img_url: 'master' }}" alt="main banner image" width="640" height="360">
+          {% endif %}
+          {% if block.settings.mobile_video == blank and block.settings.mobile_image != blank %}          
+            <img class="mobile-image" src="{{ block.settings.mobile_image | img_url: 'master' }}" alt="main banner image" width="640" height="360">
+          {% endif %}
+        </a>
+      </div>
+    {% if block.settings.desktop_video != blank %}
+    <button class="custom-mute-button">
+    <span class="icon-mute">
+      {% render 'icon-mute' %}
+    </span>
+    <span class="icon-unmute">
+      {% render 'icon-unmute' %}
+    </span>
+  </button>
+  {% endif %}
+
+ {% if block.settings.prev_button_link != blank or block.settings.next_button_link != blank %}
+    <button class="custom-next-prev-button">
+    <span class="custom-prev-button">
+     <a href="{{ block.settings.next_button_link }}">
+      {% render 'icon-prev' %}
+      </a>
+    </span>
+    <span class="custom-next-button">
+    <a href="{{ block.settings.prev_button_link }}">
+       {% render 'icon-next' %}
+    </a>
+    </span>
+  </button>
+  {% endif %}
+
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Main Banner Slider",
+  "class": "section swiper-slide",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Image Slide",
+      "settings": [
+        {
+        "type": "video",
+        "id": "desktop_video",
+        "label": "Desktop Video"
+        },
+        {
+        "type": "video",
+        "id": "mobile_video",
+        "label": "Mobile Video"
+        },
+        {
+        "type": "image_picker",
+        "id": "desktop_image",
+        "label": "Desktop Image"
+        },
+        {
+        "type": "image_picker",
+        "id": "mobile_image",
+        "label": "Mobile Image"
+        },
+        {
+        "type": "url",
+        "id": "button_link",
+        "label": "Banner Link"
+        },
+        {
+        "type": "url",
+        "id": "prev_button_link",
+        "label": "Previous Slide Link"
+        },
+        {
+        "type": "url",
+        "id": "next_button_link",
+        "label": "Next Slide Link"
+        },
+        {
+        "type": "color",
+        "id": "slide_color",
+        "label": "Slide 1 Color"
+        }
+     ]
+    }
+  ],
+  "presets": [
+  {
+    "name": "Main Banner Slider",
+    "blocks": [
+      {
+        "type": "slide"
+      }
+    ]
+  }
+]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+

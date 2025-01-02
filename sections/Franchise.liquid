@@ -1,0 +1,106 @@
+<style>
+  .nz-main{
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+  .nz-main .main-page-title{
+    font-size: 25px;
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    color: #000;
+  }
+  .nz-main-img img{
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .nz-btn-link {
+    margin-top: 35px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+  .nz-btn-link a {
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    padding: 25px 85px;
+    background-color: #000;
+}
+  @media(max-width: 767px){
+    .nz-main .main-page-title{
+    font-size: 16px;
+    }
+    .nz-btn-link a {
+    font-size: 14px;
+    padding: 7px 12px;
+}
+  }
+</style>
+
+
+<div class="nz-main">
+  {% if section.settings.main_titel != blank  %}
+  <div class="main-page-title">
+  {{section.settings.main_titel}}
+  </div>
+  {% endif %}
+<div class="page-width"> 
+{% if section.settings.main_image != blank  %} 
+<div class="nz-main-img">
+  <a href="{{ section.settings.img_link }}"><img src="{{ section.settings.main_image | img_url: 'master' }}" alt="Bata Franchise"></a>
+</div>
+{% endif %}
+
+{% if section.settings.btn_link != blank and section.settings.btn_text != blank  %} 
+<div class="nz-btn-link">
+  <a href="{{ section.settings.btn_link }}">{{ section.settings.btn_text }}</a>
+</div>
+{% endif %} 
+  
+</div>
+</div>
+
+
+
+{% schema %}
+{
+  "name": "Franchise Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "main_titel",
+      "label": "Main Title",
+      "default": "Your Title Here"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Image"
+    },
+    {
+      "type": "url",
+      "id": "img_link",
+      "label": "Image Link"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Franchise Section",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

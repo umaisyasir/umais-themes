@@ -1,0 +1,84 @@
+{%- assign colorStyle = 'rounded' -%}
+{%- assign colorType = settings.color_type -%}
+{%- assign colorSize = 'medium' -%}
+{%- assign imgPosition = 'center' -%}
+
+{% assign length = false %}
+{% for product_option in product.options_with_values %}
+  {% if product_option.name contains 'color' or product_option.name == 'Color' %}
+    {% for value in product_option.values %}
+      {% if forloop.length >= 1 %}
+        {% assign length = true %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+
+<select
+  name="id"
+  id="ProductSelect-{{ section.id }}"
+  data-section="{{ section.id }}"
+  class="product-form__variants selectbox no-js hide"
+>
+  {% for variant in product.variants %}
+    {% if variant.available %}
+      <option
+        class="available"
+        var_title="{{ variant.title | handle }}"
+        {% if variant == current_variant %}
+          selected="selected"
+        {% endif %}
+        value="{{ variant.id }}"
+      >
+        {{ variant.title }}
+      </option>
+    {% else %}
+      <option var_title="{{ variant.title | handle }}" disabled="disabled">
+        {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+      </option>
+    {% endif %}
+  {% endfor %}
+</select>
+
+{%- if product.options.size > 0 and length -%}
+  {% capture colorSwatches %}  
+    <ul class="gridSwatches color_swatches">
+      {% for option in product.options %}
+          {% assign downcased_opt = option | downcase %}
+            {% if downcased_opt contains 'color' or downcased_opt contains 'colour' or downcased_opt contains 'couleur' or downcased_opt contains 'farbe' %}
+              {% assign index = forloop.index0 %}
+              {% assign colorlist = '' %}
+              {% assign color = '' %}
+  
+              {% if product.variants.size >= 1 %}
+              {% for variant in product.variants %}
+                {% capture color %}{{ variant.options[index] }}{% endcapture %}
+                {% assign colorloop = colorlist | split: "," %}
+                {% unless colorloop contains color %}
+                {% assign text = color | handleize %}
+                {% if colorType == "color" %}
+                  <li data-variant-id="{{ variant.id }}"  class="swatch {{colorSize}} {{colorStyle}} swt{{color | handle}}{% if variant.image == null %} noImg{% endif %}" style="background-color: {{ color | handle }};"
+                    {% if variant.image != null %}rel="{{ variant.image.src | product_img_url: '400x' }}"{% endif %} title="{{color | split:' '}}" handle="{{ color | handle }}">
+                    <a href="#" onclick="return false;" variant-url="{{ variant.url }}" class="variant__link">
+                    </a>
+                   {% comment %} <li class="color-title-wrap">{{ color | handle }}</li> {% endcomment %}
+                  </li>
+                {% else %}
+                  <li data-variant-id="{{ variant.id }}"  class="{% if forloop.first %}active {% endif %}swatch lazyload {{colorSize}} {{colorStyle}}" title="{{color}}" handle="{{ color | handle }}" rel="{{ variant.image.src | product_img_url: '400x' }}"
+                      data-bgset="{% render 'swatch-bg', image: variant.image %}" data-sizes="auto" data-parent-fit="contain"
+                      style="background-color: {{ color | handle }};background-image:url({{ variant.image | img_url: 'master' }});background-position:{{imgPosition}};background-size:cover;">
+                    <a href="#" onclick="return false;" variant-url="{{ variant.url }}" class="variant__link"></a>
+                    {% comment %} <li class="color-title-wrap">{{ color | handle }}</li> {% endcomment %}
+                  </li>
+                {% endif %}
+                {% capture tempList %}{{ colorlist | append: color | append: ',' }}{% endcapture %}
+                {% assign colorlist = tempList %}
+                {% endunless %}
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endcapture %}
+  {{ colorSwatches | strip_newlines | remove: '  ' | remove: '	' }}
+{%- endif -%}
