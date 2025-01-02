@@ -1,1 +1,180 @@
-{"sections":{"main_banner_nWT38H":{"type":"main-banner","blocks":{"slide_mHgMYm":{"type":"slide","settings":{"desktop_image":"shopify:\/\/shop_images\/Servis_Banner.webp","mobile_image":"shopify:\/\/shop_images\/Servis_Mobile_Banner.webp","button_link":"shopify:\/\/collections\/all","prev_button_link":"","next_button_link":"","slide_color":""}}},"block_order":["slide_mHgMYm"],"settings":{}},"main_banner_QCwFVT":{"type":"main-banner","blocks":{"slide_wgfeXT":{"type":"slide","settings":{"desktop_image":"shopify:\/\/shop_images\/web-banner_4f92a867-319a-46d9-a0d8-2f046fc364c0.jpg","mobile_image":"shopify:\/\/shop_images\/mobile_3f07471b-df14-4b1f-857b-c68b9f55568f.jpg","button_link":"shopify:\/\/collections\/all","prev_button_link":"","next_button_link":"","slide_color":"#ffffff"}}},"block_order":["slide_wgfeXT"],"settings":{}},"main_banner_XW4icH":{"type":"main-banner","blocks":{"slide_U8hHpL":{"type":"slide","settings":{"desktop_video":"shopify:\/\/files\/videos\/e35754b4c8214f3b8e644f65dddadb3f.HD-1080p-7.2Mbps-38053793.mp4","mobile_video":"shopify:\/\/files\/videos\/e35754b4c8214f3b8e644f65dddadb3f.HD-1080p-7.2Mbps-38053793.mp4","button_link":"shopify:\/\/collections\/all","prev_button_link":"","next_button_link":"","slide_color":"#ffffff"}}},"block_order":["slide_U8hHpL"],"settings":{}},"main_banner_nMwJ8L":{"type":"main-banner","blocks":{"slide_wyGdnk":{"type":"slide","settings":{"desktop_image":"shopify:\/\/shop_images\/Banner_5020d14d-06d3-4dfd-8a87-c6ca51ecb843.webp","mobile_image":"shopify:\/\/shop_images\/ndure-mobile-final-dimensions.webp","button_link":"shopify:\/\/collections\/all","prev_button_link":"","next_button_link":"","slide_color":""}}},"block_order":["slide_wyGdnk"],"settings":{}}},"order":["main_banner_nWT38H","main_banner_QCwFVT","main_banner_XW4icH","main_banner_nMwJ8L"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main_banner_nWT38H": {
+      "type": "main-banner",
+      "blocks": {
+        "slide_mHgMYm": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Servis_Banner.webp",
+            "mobile_image": "shopify://shop_images/Servis_Mobile_Banner.webp",
+            "button_link": "shopify://collections/all",
+            "prev_button_link": "",
+            "next_button_link": "",
+            "slide_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_mHgMYm"
+      ],
+      "settings": {}
+    },
+    "main_banner_QCwFVT": {
+      "type": "main-banner",
+      "blocks": {
+        "slide_wgfeXT": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/web-banner_4f92a867-319a-46d9-a0d8-2f046fc364c0.jpg",
+            "mobile_image": "shopify://shop_images/mobile_3f07471b-df14-4b1f-857b-c68b9f55568f.jpg",
+            "button_link": "shopify://collections/all",
+            "prev_button_link": "",
+            "next_button_link": "",
+            "slide_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "slide_wgfeXT"
+      ],
+      "settings": {}
+    },
+    "main_banner_XW4icH": {
+      "type": "main-banner",
+      "blocks": {
+        "slide_U8hHpL": {
+          "type": "slide",
+          "settings": {
+            "desktop_video": "shopify://files/videos/e35754b4c8214f3b8e644f65dddadb3f.HD-1080p-7.2Mbps-38053793.mp4",
+            "mobile_video": "shopify://files/videos/e35754b4c8214f3b8e644f65dddadb3f.HD-1080p-7.2Mbps-38053793.mp4",
+            "button_link": "shopify://collections/all",
+            "prev_button_link": "",
+            "next_button_link": "",
+            "slide_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "slide_U8hHpL"
+      ],
+      "settings": {}
+    },
+    "main_banner_nMwJ8L": {
+      "type": "main-banner",
+      "blocks": {
+        "slide_wyGdnk": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Banner_5020d14d-06d3-4dfd-8a87-c6ca51ecb843.webp",
+            "mobile_image": "shopify://shop_images/ndure-mobile-final-dimensions.webp",
+            "button_link": "shopify://collections/all",
+            "prev_button_link": "",
+            "next_button_link": "",
+            "slide_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_wyGdnk"
+      ],
+      "settings": {}
+    },
+    "vb_custom_reels_EUcNtF": {
+      "type": "vb_custom-reels",
+      "blocks": {
+        "reel_VLpMXf": {
+          "type": "reel",
+          "settings": {
+            "reel_url": ""
+          }
+        },
+        "reel_3zQTXC": {
+          "type": "reel",
+          "settings": {
+            "reel_url": ""
+          }
+        },
+        "reel_denzLY": {
+          "type": "reel",
+          "settings": {
+            "reel_url": ""
+          }
+        },
+        "reel_qVAUBe": {
+          "type": "reel",
+          "settings": {
+            "reel_url": ""
+          }
+        },
+        "reel_8c3LHU": {
+          "type": "reel",
+          "settings": {
+            "reel_url": ""
+          }
+        },
+        "reel_hFak3z": {
+          "type": "reel",
+          "settings": {
+            "reel_url": ""
+          }
+        },
+        "reel_R9f4ib": {
+          "type": "reel",
+          "settings": {
+            "reel_url": ""
+          }
+        },
+        "reel_mwUzXT": {
+          "type": "reel",
+          "settings": {
+            "reel_url": ""
+          }
+        },
+        "reel_hPnfDw": {
+          "type": "reel",
+          "settings": {
+            "reel_url": ""
+          }
+        },
+        "reel_QRfw7B": {
+          "type": "reel",
+          "settings": {
+            "reel_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "reel_VLpMXf",
+        "reel_3zQTXC",
+        "reel_denzLY",
+        "reel_qVAUBe",
+        "reel_8c3LHU",
+        "reel_hFak3z",
+        "reel_R9f4ib",
+        "reel_mwUzXT",
+        "reel_hPnfDw",
+        "reel_QRfw7B"
+      ],
+      "settings": {
+        "logo_url": ""
+      }
+    }
+  },
+  "order": [
+    "main_banner_nWT38H",
+    "main_banner_QCwFVT",
+    "main_banner_XW4icH",
+    "main_banner_nMwJ8L",
+    "vb_custom_reels_EUcNtF"
+  ]
+}
