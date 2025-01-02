@@ -1,0 +1,486 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="custom-reels-section" id="video-gallery">
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      {% for reel in section.blocks %}
+      <div class="swiper-slide">
+        <div class="reel-wrapper">
+          <video src="{{ reel.settings.reel_url }}" muted autoplay loop id="frontVideo{{ forloop.index }}" onclick="openPopup(this)" onended="repeatVideo(this)" playsinline></video>
+          <video src="{{ reel.settings.reel_url }}" id="mainVideo{{ forloop.index }}" class="main-video hidden" muted onclick="openPopup(this)" playsinline></video>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="swiper-button-next fas fa-chevron-right"></div>
+    <div class="swiper-button-prev fas fa-chevron-left"></div>
+  </div>
+</div>
+
+<div id="reelPopup" class="reel-popup">
+  <div class="popup-content">
+    <span class="close-popup fas fa-times" onclick="closePopup()"></span>
+    <img id="popupLogo" class="popup-logo" src="" alt="Logo" />
+    <video id="popupVideo" autoplay muted loop></video>
+    <div class="popup-navigation">
+      <button class="popup-prev fas fa-chevron-left" onclick="prevVideo()"></button>
+      <button class="popup-next fas fa-chevron-right" onclick="nextVideo()"></button>
+    </div>
+    <div class="popup-controls">
+      <button class="popup-mute fas fa-volume-mute" onclick="toggleMute()"></button>
+      <button class="popup-fullscreen fas fa-expand" onclick="toggleFullscreen()"></button>
+      <button class="popup-share fas fa-share" onclick="shareVideo()"></button>
+      <button class="popup-position fas fa-arrows-alt" onclick="togglePosition()"></button>
+    </div>
+  </div>
+</div>
+
+<style>
+.custom-reels-section {
+  margin: 20px auto;
+  width: 90%;
+  max-width: 1500px;
+  transition: all 0.5s ease;
+}
+
+.popup-add-to-cart {
+  background-color: #ff6a00;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.popup-add-to-cart:hover {
+  background-color: #ff4500;
+}
+
+.swiper-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.swiper-wrapper {
+  display: flex;
+}
+
+.swiper-slide {
+  flex-shrink: 0;
+  width: calc(100% / 5);
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  transition: transform 0.5s ease;
+  height: initial !important;
+}
+
+.reel-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  height: 100%;
+}
+
+.reel-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  cursor: pointer;
+}
+
+.reel-wrapper video:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.hidden {
+  display: none;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  position: absolute;
+  top: 54%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  width: 50px;
+  height: 50px;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.swiper-button-next:hover, .swiper-button-prev:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.swiper-button-next {
+  right: 15px;
+}
+
+.swiper-button-prev {
+  left: 15px;
+}
+
+@media (max-width: 1024px) {
+  .swiper-slide {
+    width: calc(100% / 3);
+  }
+}
+
+@media (max-width: 768px) {
+  .swiper-slide {
+    width: calc(100% / 2);
+  }
+
+  .popup-content.video-bottom-right {
+    height: 290px !important;
+  }
+
+  .popup-content.video-bottom-right .popup-controls button {
+    font-size: 20px !important;
+  }
+
+  .popup-content.video-bottom-right .popup-logo {
+    top: 10px;
+    left: 10px;
+    max-width: 70px;
+  }
+}
+
+.reel-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.reel-popup.active {
+  display: flex;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.reel-popup.bottom_rightwidth {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  height: 200px;
+  z-index: 9999;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.popup-content {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  height: 80%;
+  background-color: #000;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.5s ease;
+  animation: popUpAnimation 0.5s ease;
+}
+
+@keyframes popUpAnimation {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.popup-content.video-bottom-right {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: fit-content;
+  height: 425px;
+  z-index: 9999;
+  filter: drop-shadow(2px 4px 6px black);
+}
+
+.popup-content.video-bottom-right .popup-controls {
+  bottom: 10px;
+  left: 10px;
+}
+
+.popup-content video {
+  width: 100%;
+  height: 100%;
+}
+
+.close-popup {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.close-popup:hover {
+  transform: rotate(90deg);
+}
+
+.popup-navigation {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  z-index: 2;
+  padding: 0 10px;
+}
+
+.popup-prev,
+.popup-next {
+  background: rgba(255, 255, 255, 0.8);
+  color: #000;
+  border: none;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+.popup-prev:hover,
+.popup-next:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.2);
+}
+
+.popup-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 15px;
+  z-index: 2;
+}
+
+.popup-controls button {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 22px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.popup-controls button:hover {
+  background: rgba(255, 255, 255, 0.9);
+  color: black;
+  transform: scale(1.15);
+}
+
+.popup-logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  max-width: 100px;
+  z-index: 3;
+  object-fit: contain;
+  animation: logoFadeIn 0.5s ease forwards;
+}
+
+@keyframes logoFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bottom_rightwidth {
+  width: fit-content !important;
+}
+
+.swiper-button-next:after, .swiper-button-prev:after {
+   content: none;
+}
+
+.reel-popup.bottom_rightwidth button.popup-fullscreen.fas.fa-expand,
+.reel-popup.bottom_rightwidth button.popup-share.fas.fa-share {
+    display: none;
+}
+</style>
+
+<script>
+function repeatVideo(videoElement) {
+  videoElement.currentTime = 0;  // Restart the video
+  videoElement.play();            // Play the video again
+}
+
+function playMainVideo(frontVideo) {
+  const mainVideo = frontVideo.nextElementSibling;
+  frontVideo.classList.add("hidden");
+  mainVideo.classList.remove("hidden");
+  mainVideo.play();
+}
+
+function openPopup(videoElement) {
+  const popup = document.getElementById("reelPopup");
+  const popupVideo = document.getElementById("popupVideo");
+  const popupLogo = document.getElementById("popupLogo");
+  popupVideo.src = videoElement.src;
+  popupLogo.src = "{{ section.settings.logo_url }}";
+  popup.classList.add("active");
+  currentVideoIndex = Array.from(videoElement.closest('.swiper-slide').parentElement.children).indexOf(videoElement.closest('.swiper-slide'));
+}
+
+function closePopup() {
+  const popup = document.getElementById("reelPopup");
+  const popupVideo = document.getElementById("popupVideo");
+  popup.classList.remove("active");
+  popupVideo.pause();
+  popupVideo.src = "";
+}
+
+function toggleMute() {
+  const popupVideo = document.getElementById("popupVideo");
+  const muteToggle = document.querySelector(".popup-mute");
+  if (popupVideo.muted) {
+    popupVideo.muted = false;
+    muteToggle.classList.replace("fa-volume-mute", "fa-volume-up");
+  } else {
+    popupVideo.muted = true;
+    muteToggle.classList.replace("fa-volume-up", "fa-volume-mute");
+  }
+}
+
+function toggleFullscreen() {
+  const popupVideo = document.getElementById("popupVideo");
+  if (popupVideo.requestFullscreen) {
+    popupVideo.requestFullscreen();
+  } else if (popupVideo.webkitRequestFullscreen) {
+    popupVideo.webkitRequestFullscreen();
+  } else if (popupVideo.msRequestFullscreen) {
+    popupVideo.msRequestFullscreen();
+  }
+}
+
+function shareVideo() {
+  const popupVideo = document.getElementById("popupVideo");
+  const videoUrl = popupVideo.src;
+  if (navigator.share) {
+    navigator
+      .share({
+        title: "Check out this video!",
+        url: videoUrl,
+      })
+      .then(() => console.log("Thanks for sharing!"))
+      .catch(console.error);
+  } else {
+    alert("Sharing not supported on this browser.");
+  }
+}
+
+function togglePosition() {
+  const popupContent = document.querySelector(".popup-content");
+  const popup = document.getElementById("reelPopup");
+  popupContent.classList.toggle("video-bottom-right");
+  popup.classList.toggle("bottom_rightwidth");
+}
+
+let currentVideoIndex = 0;
+
+function nextVideo() {
+  const slides = document.querySelectorAll(".swiper-slide");
+  if (currentVideoIndex < slides.length - 1) {
+    currentVideoIndex++;
+    const nextVideo = slides[currentVideoIndex].querySelector("video");
+    const popupVideo = document.getElementById("popupVideo");
+    popupVideo.src = nextVideo.src;
+    popupVideo.play();
+  }
+}
+
+function prevVideo() {
+  if (currentVideoIndex > 0) {
+    currentVideoIndex--;
+    const slides = document.querySelectorAll(".swiper-slide");
+    const prevVideo = slides[currentVideoIndex].querySelector("video");
+    const popupVideo = document.getElementById("popupVideo");
+    popupVideo.src = prevVideo.src;
+    popupVideo.play();
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const swiper = new Swiper(".swiper-container", {
+    slidesPerView: 2,
+    spaceBetween: 20,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    breakpoints: {
+      1024: {
+        slidesPerView: 5,
+      },
+      768: {
+        slidesPerView: 2,
+      },
+      480: {
+        slidesPerView: 2,
+      }
+    },
+    loop: false,
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "VB - Custom Reels",
+  "settings": [
+    {
+      "type": "url",
+      "id": "logo_url",
+      "label": "Logo URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "reel",
+      "name": "Reel",
+      "settings": [
+        {
+          "type": "url",
+          "id": "reel_url",
+          "label": "Reel URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "VB - Custom Reels",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
